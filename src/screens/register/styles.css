@@ -1,0 +1,13 @@
+.error{
+  color: red;
+}
+.passWithButton{
+  display: flex;
+  height: 40px;
+}
+.passButton{
+  font-size: 10px;
+}
+.passButton p{
+  padding-top:5px ;
+}
