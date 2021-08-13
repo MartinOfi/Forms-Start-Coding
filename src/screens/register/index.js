@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Formik } from "formik";
+import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 import "./styles.css";
 
@@ -27,130 +27,121 @@ const RegisterSchema = Yup.object().shape({
 
 const Register = () => {
   const [visible, setVisible] = useState(false);
+
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      id: "",
+      phone: "",
+      email: "",
+      password: "",
+      repeatPassword: "",
+    },
+    //Validacion
+    validationSchema:  RegisterSchema ,
+    //Forma de mandar todo el formulario y obtener los datos
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
   return (
     <div className="container px-5 py-5">
-      {/* Manera que se rellenan los campos que creamos y que empiezan estando vacios y se llenan con el fomulario */}
-      <Formik
-        initialValues={{
-          name: "",
-          id: "",
-          phone: "",
-          email: "",
-          password: "",
-          repeatPassword: "",
-        }}
-        //Validacion
-        validationSchema={RegisterSchema}
-        //Forma de mandar todo el formulario y obtener los datos
-        onSubmit={((values)=>{console.log(values);})}
-      >
-        {/* Momento en el que se muestren los mensajes de error de las validaciones que hicimos */}
-        {({
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-        }) => (
-          <form onSubmit={handleSubmit}>
-            <input
-              placeholder="Nombre completo"
-              name="name"
-              onChange={handleChange("name")}
-              /* onBlur={handleBlur("name")} */
-              value={values.name}
-              className="form-control"
-            />
-            {touched.name && errors.name && (
-              <p className="error">{errors.name}</p>
-            )}
-            <br />
-            <input
-              placeholder="Numero de documento"
-              name="id"
-              type="number"
-              onChange={handleChange("id")}
-              /* onBlur={handleBlur("id")} */
-              value={values.id}
-              className="form-control"
-            />
-            {touched.id && errors.id && <p className="error">{errors.id}</p>}
-            <br />
-            <input
-              placeholder="Numero de telefono"
-              name="phone"
-              type="number"
-              onChange={handleChange("phone")}
-              /* onBlur={handleBlur("phone")} */
-              value={values.phone}
-              className="form-control"
-            />
-            {touched.phone && errors.phone && (
-              <p className="error">{errors.phone}</p>
-            )}
-            <br />
-            <input
-              placeholder="Correo electronico"
-              name="email"
-              onChange={handleChange("email")}
-              /* onBlur={handleBlur("email")} */
-              value={values.email}
-              className="form-control"
-            />
-            {touched.email && errors.email && (
-              <p className="error">{errors.email}</p>
-            )}
-            <br />
-            <div className="input-group-append">
-              <div className="passWithButton">
-                <input
-                  placeholder="Contraseña"
-                  name="password"
-                  onChange={handleChange("password")}
-                  /* onBlur={handleBlur("password")} */
-                  value={values.password}
-                  type={visible ? "text" : "password"}
-                  className="form-control"
-                />
-                <button
-                  className="btn btn-secondary passButton"
-                  onClick={() => setVisible(!visible)}
-                >
-                  {visible ? <p>OCultar</p> : <p>Mostrar</p>}
-                </button>
-              </div>
-              {touched.password && errors.password && (
-                <p className="error">{errors.password}</p>
-              )}
-              <br />
-              <div className="passWithButton">
-                <input
-                  placeholder="Repetir contraseña"
-                  name="repeatPassword"
-                  onChange={handleChange("repeatPassword")}
-                  /* onBlur={handleBlur("repeatPassword")} */
-                  value={values.repeatPassword}
-                  type={visible ? "text" : "password"}
-                  className="form-control"
-                />
-
-                <button
-                  className="btn btn-secondary passButton"
-                  onClick={() => setVisible(!visible)}
-                >
-                  {visible ? <p>OCultar</p> : <p>Mostrar</p>}
-                </button>
-              </div>
-              {touched.repeatPassword && errors.repeatPassword && (
-                <p className="error">{errors.repeatPassword}</p>
-              )}
-            </div>
-            <br />
-            <button type="submit" className="btn btn-primary">Registrarme</button>
-          </form>
+      <form onSubmit={formik.handleSubmit}>
+        <input
+          placeholder="Nombre completo"
+          name="name"
+          onChange={formik.handleChange}
+          /* onBlur={handleBlur("name")} */
+          value={formik.values.name}
+          className="form-control"
+        />
+        {formik.touched.name && formik.errors.name && <p className="error">{formik.errors.name}</p>}
+        <br />
+        <input
+          placeholder="Numero de documento"
+          name="id"
+          type="number"
+          onChange={formik.handleChange}
+          handleBlur={formik.handleBlur}
+          value={formik.values.id}
+          className="form-control"
+        />
+        {formik.touched.id && formik.errors.id && <p className="error">{formik.errors.id}</p>}
+        <br />
+        <input
+          placeholder="Numero de telefono"
+          name="phone"
+          type="number"
+          onChange={formik.handleChange}
+          /* onBlur={handleBlur("phone")} */
+          value={formik.values.phone}
+          className="form-control"
+        />
+        {formik.touched.phone && formik.errors.phone && (
+          <p className="error">{formik.errors.phone}</p>
         )}
-      </Formik>
+        <br />
+        <input
+          placeholder="Correo electronico"
+          name="email"
+          onChange={formik.handleChange}
+          /* onBlur={handleBlur("email")} */
+          value={formik.values.email}
+          className="form-control"
+        />
+        {formik.touched.email && formik.errors.email && (
+          <p className="error">{formik.errors.email}</p>
+        )}
+        <br />
+        <div className="input-group-append">
+          <div className="passWithButton">
+            <input
+              placeholder="Contraseña"
+              name="password"
+              onChange={formik.handleChange}
+              /* onBlur={handleBlur("password")} */
+              value={formik.values.password}
+              type={visible ? "text" : "password"}
+              className="form-control"
+            />
+            <button
+              className="btn btn-secondary passButton"
+              onClick={() => setVisible(!visible)}
+            >
+              {visible ? <p>OCultar</p> : <p>Mostrar</p>}
+            </button>
+          </div>
+          {formik.touched.password && formik.errors.password && (
+            <p className="error">{formik.errors.password}</p>
+          )}
+          <br />
+          <div className="passWithButton">
+            <input
+              placeholder="Repetir contraseña"
+              name="repeatPassword"
+              onChange={formik.handleChange}
+              /* onBlur={handleBlur("repeatPassword")} */
+              value={formik.values.repeatPassword}
+              type={visible ? "text" : "password"}
+              className="form-control"
+            />
+
+            <button
+              className="btn btn-secondary passButton"
+              onClick={() => setVisible(!visible)}
+            >
+              {visible ? <p>OCultar</p> : <p>Mostrar</p>}
+            </button>
+          </div>
+          {formik.touched.repeatPassword && formik.errors.repeatPassword && (
+            <p className="error">{formik.errors.repeatPassword}</p>
+          )}
+        </div>
+        <br />
+        <button type="submit" className="btn btn-primary">
+          Registrarme
+        </button>
+      </form>
     </div>
   );
 };
